@@ -8,7 +8,7 @@ Q(s, a)
 
 """
 import numpy as np
-
+from utility import config
 
 class DiscreteAV:
     UPPER_BOUND = 1e3
@@ -40,7 +40,26 @@ class DiscreteAV:
         :returns
             n-dimensional numpy array representing action-values for the state
         """
-        return NotImplementedError
+        indices = self.__discretize(state)
+        return self.Q[indices]
+
+    def update(self, state, action, reward):
+        """
+        Given a state and action as input, updates the value of the Q for that state action pair with
+        the reward that was received using
+        """
+
+        indices = self.__discretize(state)
+        # append action to state for indexing
+        indices = tuple(list(indices).append(action))
+        # load hyperparameters from config.json
+        alpha = config('Discretized.step_size')
+        gamma = config('Discretized.discount_rate')
+
+        # TODO: perform update
+
+
+
 
     def __discretize(self, state):
         """
@@ -49,7 +68,7 @@ class DiscreteAV:
         used to rescale.
 
         :returns
-            n-dimensional numpy array representing index into Q array for state
+            n-dimensional tuple representing index into Q array for state
         """
 
         state_indices = []
@@ -60,4 +79,4 @@ class DiscreteAV:
 
             state_indices.append(int(np.floor(state[i] / self.tile_size[i] + self.state_action_dims[i] / 2)))
 
-        return np.array(state_indices)
+        return tuple(state_indices)
