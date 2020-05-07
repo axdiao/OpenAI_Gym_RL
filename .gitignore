@@ -1,2 +1,3 @@
 # file: ~/.gitgnore_global
 .idea
+__pycache__/
