@@ -43,21 +43,36 @@ class DiscreteAV:
         indices = self.__discretize(state)
         return self.Q[indices]
 
-    def update(self, state, action, reward):
+    def action_value(self, state, action):
+        """
+        Given a state and action as input, returns the float value associated with the state
+        action pair; Q(s, a).
+
+        :returns
+            float value representing Q(s, a)
+        """
+        indices = self.__discretize(state)
+        indices = tuple(list(indices).append(action))
+        return self.Q[indices]
+
+    def update(self, state, action, reward, next_state, next_action):
         """
         Given a state and action as input, updates the value of the Q for that state action pair with
         the reward that was received using
         """
 
         indices = self.__discretize(state)
+        next_indices = self.__discretize(next_state)
         # append action to state for indexing
         indices = tuple(list(indices).append(action))
-        # load hyperparameters from config.json
+        next_indices = tuple(list(next_indices).append(next_action))
+
+        # load hyper-parameters
         alpha = config('Discretized.step_size')
         gamma = config('Discretized.discount_rate')
 
-        # TODO: perform update
-
+        # perform update
+        self.Q[indices] = self.Q[indices] + alpha * (reward + gamma * self.Q[next_indices] - self.Q[indices])
 
 
 

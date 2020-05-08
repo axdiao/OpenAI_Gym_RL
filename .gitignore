@@ -1,3 +1,5 @@
 # file: ~/.gitgnore_global
 .idea
 __pycache__/
+# omit unit tests
+test_*
