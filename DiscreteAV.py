@@ -64,8 +64,12 @@ class DiscreteAV:
         indices = self.__discretize(state)
         next_indices = self.__discretize(next_state)
         # append action to state for indexing
-        indices = tuple(list(indices).append(action))
-        next_indices = tuple(list(next_indices).append(next_action))
+        idx_list = list(indices)
+        idx_list.append(action)
+        indices = tuple(idx_list)
+        next_idx_list = list(next_indices)
+        next_idx_list.append(next_action)
+        next_indices = tuple(next_idx_list)
 
         # load hyper-parameters
         alpha = config('Discretized.step_size')
